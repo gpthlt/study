@@ -1,1 +1,38 @@
-<!-- Vocab list view -->
+<%- include('../layout/header') %>
+
+<div class="container mt-4">
+  <h1 class="mb-4">Vocabulary Lists</h1>
+
+  <% if (vocabLists.length === 0) { %>
+  <div class="alert alert-info">No vocabulary lists available yet.</div>
+  <% } else { %>
+  <div class="row">
+    <% vocabLists.forEach(list => { %>
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title"><%= list.title %></h5>
+          <p class="card-text text-muted">
+            <%= list.description || 'No description' %>
+          </p>
+          <span class="badge bg-primary"><%= list.level %></span>
+          <span class="badge bg-secondary"><%= list.words.length %> words</span>
+        </div>
+        <div class="card-footer bg-transparent">
+          <a href="/vocab/<%= list._id %>" class="btn btn-primary btn-sm"
+            >View Details</a
+          >
+          <a
+            href="/vocab/<%= list._id %>/listening"
+            class="btn btn-success btn-sm"
+            >Practice Listening</a
+          >
+        </div>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+  <% } %>
+</div>
+
+<%- include('../layout/footer') %>

@@ -1,1 +1,142 @@
-<!-- Vocab listening view -->
+<%- include('../layout/header') %>
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Listening Practice</h1>
+    <a href="/vocab/<%= vocabList._id %>" class="btn btn-secondary"
+      >Back to List</a
+    >
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title mb-4"><%= vocabList.title %></h5>
+
+          <div class="mb-4">
+            <p class="lead">Listen and type the word you hear:</p>
+            <% if (currentWord.audio) { %>
+            <audio id="wordAudio" controls class="mb-3">
+              <source src="<%= currentWord.audio %>" type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
+            <br />
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="document.getElementById('wordAudio').play()"
+            >
+              <i class="bi bi-volume-up"></i> Play Again
+            </button>
+            <% } else { %>
+            <div class="alert alert-warning">
+              Audio not available for this word
+            </div>
+            <% } %>
+          </div>
+
+          <div id="answerForm">
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control form-control-lg text-center"
+                id="userAnswer"
+                placeholder="Type your answer here"
+                autocomplete="off"
+              />
+            </div>
+            <button
+              type="button"
+              class="btn btn-success btn-lg"
+              onclick="checkAnswer()"
+            >
+              Check Answer
+            </button>
+          </div>
+
+          <div id="resultArea" class="mt-4" style="display: none">
+            <div id="resultMessage" class="alert"></div>
+            <div id="correctAnswer" class="mb-3"></div>
+            <button type="button" class="btn btn-primary" onclick="nextWord()">
+              Next Word
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const currentWordId = "<%= currentWord._id %>";
+  const vocabListId = "<%= vocabList._id %>";
+
+  async function checkAnswer() {
+    const userAnswer = document.getElementById("userAnswer").value.trim();
+
+    if (!userAnswer) {
+      alert("Please type your answer");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/vocab/${vocabListId}/listening/check`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          wordId: currentWordId,
+          userAnswer: userAnswer,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        document.getElementById("answerForm").style.display = "none";
+        document.getElementById("resultArea").style.display = "block";
+
+        const resultMessage = document.getElementById("resultMessage");
+        const correctAnswer = document.getElementById("correctAnswer");
+
+        if (result.correct) {
+          resultMessage.className = "alert alert-success";
+          resultMessage.innerHTML = "<h4>✓ Correct!</h4>";
+          correctAnswer.innerHTML = `<strong>Word:</strong> ${result.correctAnswer}<br><strong>Meaning:</strong> ${result.meaning}`;
+        } else {
+          resultMessage.className = "alert alert-danger";
+          resultMessage.innerHTML = "<h4>✗ Incorrect</h4>";
+          correctAnswer.innerHTML = `<strong>Your answer:</strong> ${userAnswer}<br><strong>Correct answer:</strong> ${result.correctAnswer}<br><strong>Meaning:</strong> ${result.meaning}`;
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error checking answer. Please try again.");
+    }
+  }
+
+  function nextWord() {
+    window.location.href = `/vocab/${vocabListId}/listening`;
+  }
+
+  // Allow Enter key to submit
+  document
+    .getElementById("userAnswer")
+    .addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        checkAnswer();
+      }
+    });
+
+  // Auto-play audio on page load
+  window.addEventListener("load", function () {
+    const audio = document.getElementById("wordAudio");
+    if (audio) {
+      audio.play();
+    }
+  });
+</script>
+
+<%- include('../layout/footer') %>

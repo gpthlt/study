@@ -1,1 +1,64 @@
-<!-- Vocab detail view -->
+<%- include('../layout/header') %>
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><%= vocabList.title %></h1>
+    <a href="/vocab" class="btn btn-secondary">Back to Lists</a>
+  </div>
+
+  <div class="mb-4">
+    <p class="lead"><%= vocabList.description || 'No description' %></p>
+    <span class="badge bg-primary"><%= vocabList.level %></span>
+    <span class="badge bg-secondary"><%= vocabList.words.length %> words</span>
+  </div>
+
+  <div class="mb-4">
+    <a href="/vocab/<%= vocabList._id %>/listening" class="btn btn-success">
+      <i class="bi bi-headphones"></i> Practice Listening
+    </a>
+  </div>
+
+  <div class="row">
+    <% if (vocabList.words.length === 0) { %>
+    <div class="alert alert-warning">
+      This vocabulary list has no words yet.
+    </div>
+    <% } else { %> <% vocabList.words.forEach((word, index) => { %>
+    <div class="col-md-6 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h5 class="card-title">
+                <%= index + 1 %>. <%= word.word %> <% if (word.phonetic) { %>
+                <small class="text-muted">/<%= word.phonetic %>/</small>
+                <% } %>
+              </h5>
+              <p class="card-text"><%= word.meaning %></p>
+              <% if (word.audio) { %>
+              <audio controls class="w-100" style="height: 30px">
+                <source src="<%= word.audio %>" type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+              <% } %>
+            </div>
+            <form action="/flashcard/add" method="POST" class="d-inline">
+              <input type="hidden" name="word" value="<%= word.word %>" />
+              <input type="hidden" name="meaning" value="<%= word.meaning %>" />
+              <button
+                type="submit"
+                class="btn btn-outline-primary btn-sm"
+                title="Add to Flashcards"
+              >
+                <i class="bi bi-bookmark-plus"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }); %> <% } %>
+  </div>
+</div>
+
+<%- include('../layout/footer') %>
