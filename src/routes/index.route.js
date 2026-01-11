@@ -1,10 +1,10 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
 // GET / - Home page
-router.get('/', (req, res) => {
-  res.render('layout/header', {
-    title: 'English Vocabulary Learning',
+router.get("/", (req, res) => {
+  res.render("layout/header", {
+    title: "English Vocabulary Learning",
     content: `
       <div class="container mt-5">
         <div class="text-center mb-5">
@@ -66,7 +66,7 @@ router.get('/', (req, res) => {
           </div>
         </div>
       </div>
-    `
+    `,
   });
 });
 
