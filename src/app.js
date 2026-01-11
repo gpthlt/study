@@ -47,6 +47,9 @@ app.use("/vocab", vocabRouter);
 app.use("/flashcard", flashcardRouter);
 app.use("/practice", practiceRouter);
 
+// Favicon handler - suppress 404 errors
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).render("layout/header", {
