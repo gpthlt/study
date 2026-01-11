@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "seed": "node src/seed.js"
+    "seed": "node src/seed.js",
+    "generate-audio": "node src/generate-audio.js"
   },
   "keywords": [
     "vocabulary",
@@ -25,7 +26,8 @@
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
-    "mongoose": "^8.9.3"
+    "mongoose": "^8.9.3",
+    "node-gtts": "^2.0.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
