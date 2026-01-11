@@ -1,1 +1,207 @@
-<!-- Flashcard index view -->
+<%- include('../layout/header') %>
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>My Flashcards</h1>
+    <span class="badge bg-primary fs-5"><%= totalCount %> words</span>
+  </div>
+
+  <% if (flashcards.length === 0) { %>
+  <div class="alert alert-info">
+    <h5>No flashcards yet</h5>
+    <p>
+      Start adding words from vocabulary lists to build your personal flashcard
+      collection!
+    </p>
+    <a href="/vocab" class="btn btn-primary">Browse Vocabulary Lists</a>
+  </div>
+  <% } else { %>
+  <!-- Status Summary -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card text-center border-info">
+        <div class="card-body">
+          <h5 class="card-title text-info">New</h5>
+          <p class="display-6 mb-0"><%= grouped.new.length %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center border-warning">
+        <div class="card-body">
+          <h5 class="card-title text-warning">Learning</h5>
+          <p class="display-6 mb-0"><%= grouped.learning.length %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center border-success">
+        <div class="card-body">
+          <h5 class="card-title text-success">Mastered</h5>
+          <p class="display-6 mb-0"><%= grouped.mastered.length %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flashcard Tabs -->
+  <ul class="nav nav-tabs mb-3" id="flashcardTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active"
+        id="all-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#all"
+        type="button"
+        role="tab"
+      >
+        All (<%= flashcards.length %>)
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="new-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#new"
+        type="button"
+        role="tab"
+      >
+        New (<%= grouped.new.length %>)
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="learning-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#learning"
+        type="button"
+        role="tab"
+      >
+        Learning (<%= grouped.learning.length %>)
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="mastered-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#mastered"
+        type="button"
+        role="tab"
+      >
+        Mastered (<%= grouped.mastered.length %>)
+      </button>
+    </li>
+  </ul>
+
+  <!-- Tab Content -->
+  <div class="tab-content" id="flashcardTabContent">
+    <!-- All Tab -->
+    <div class="tab-pane fade show active" id="all" role="tabpanel">
+      <%- renderFlashcardList(flashcards) %>
+    </div>
+    <!-- New Tab -->
+    <div class="tab-pane fade" id="new" role="tabpanel">
+      <%- renderFlashcardList(grouped.new) %>
+    </div>
+    <!-- Learning Tab -->
+    <div class="tab-pane fade" id="learning" role="tabpanel">
+      <%- renderFlashcardList(grouped.learning) %>
+    </div>
+    <!-- Mastered Tab -->
+    <div class="tab-pane fade" id="mastered" role="tabpanel">
+      <%- renderFlashcardList(grouped.mastered) %>
+    </div>
+  </div>
+  <% } %>
+</div>
+
+<% function renderFlashcardList(cards) { if (cards.length === 0) { return '
+<div class="alert alert-secondary">No flashcards in this category</div>
+'; } let html = '
+<div class="row">
+  '; cards.forEach((flashcard, index) => { const statusColors = { new: 'info',
+  learning: 'warning', mastered: 'success' }; const statusColor =
+  statusColors[flashcard.status] || 'secondary'; html += `
+  <div class="col-md-6 col-lg-4 mb-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <h5 class="card-title mb-0">${flashcard.word}</h5>
+          <span class="badge bg-${statusColor}">${flashcard.status}</span>
+        </div>
+        <p class="card-text text-muted">${flashcard.meaning}</p>
+      </div>
+      <div class="card-footer bg-transparent">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="btn-group btn-group-sm" role="group">
+            ${flashcard.status !== 'new' ? `
+            <form
+              action="/flashcard/${flashcard._id}/status"
+              method="POST"
+              class="d-inline"
+            >
+              <input type="hidden" name="status" value="new" />
+              <button
+                type="submit"
+                class="btn btn-outline-info"
+                title="Mark as New"
+              >
+                <i class="bi bi-arrow-counterclockwise"></i>
+              </button>
+            </form>
+            ` : ''} ${flashcard.status !== 'learning' ? `
+            <form
+              action="/flashcard/${flashcard._id}/status"
+              method="POST"
+              class="d-inline"
+            >
+              <input type="hidden" name="status" value="learning" />
+              <button
+                type="submit"
+                class="btn btn-outline-warning"
+                title="Mark as Learning"
+              >
+                <i class="bi bi-book"></i>
+              </button>
+            </form>
+            ` : ''} ${flashcard.status !== 'mastered' ? `
+            <form
+              action="/flashcard/${flashcard._id}/status"
+              method="POST"
+              class="d-inline"
+            >
+              <input type="hidden" name="status" value="mastered" />
+              <button
+                type="submit"
+                class="btn btn-outline-success"
+                title="Mark as Mastered"
+              >
+                <i class="bi bi-check-circle"></i>
+              </button>
+            </form>
+            ` : ''}
+          </div>
+          <form
+            action="/flashcard/${flashcard._id}/delete"
+            method="POST"
+            class="d-inline"
+            onsubmit="return confirm('Delete this flashcard?')"
+          >
+            <button
+              type="submit"
+              class="btn btn-outline-danger btn-sm"
+              title="Delete"
+            >
+              <i class="bi bi-trash"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  `; }); html += '
+</div>
+'; return html; } %> <%- include('../layout/footer') %>
