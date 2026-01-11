@@ -1,0 +1,115 @@
+Mục tiêu: Tạo web học từ vựng tiếng Anh bằng NodeJS + Express + MongoDB + EJS thuần, theo mô hình MVC.
+Không sử dụng React/Vue/SPA. Không thay đổi cấu trúc thư mục.
+
+🧠 CONTEXT CHO CLAUDE (RẤT QUAN TRỌNG)
+You are a senior NodeJS backend engineer.
+
+I already created the project folder structure.
+You must STRICTLY follow this structure.
+DO NOT introduce any new framework or architecture.
+DO NOT move EJS to a separate frontend project.
+DO NOT use React, Vue, NextJS, or any SPA approach.
+
+Frontend must be rendered by EJS (server-side rendering).
+Backend uses Express.
+Database is MongoDB with Mongoose.
+
+📁 STRUCTURE (BẮT BUỘC TUÂN THỦ)
+src/
+├── app.js
+├── server.js
+├── config/db.js
+├── routes/
+├── controllers/
+├── models/
+├── views/
+├── public/
+└── middlewares/
+🧩 CHỨC NĂNG CẦN CODE
+1️⃣ HỌC TỪ VỰNG (Vocabulary)
+- Vocabulary Lists
+- Each list has exactly 20 words
+
+Trang cần có
+
+/vocab → hiển thị danh sách list
+
+/vocab/:id → xem chi tiết list
+
+/vocab/:id/listening → luyện nghe chính tả
+
+Listening Practice
+- Random a word from the list
+- Play audio
+- User types the word
+- Server checks correct / incorrect
+- Show result
+
+2️⃣ FLASHCARD (My Vocabulary)
+- User can save a word to personal flashcards
+- User can view flashcards
+- User can delete flashcards
+- No authentication for now (use dummy userId)
+
+🗄️ DATABASE SCHEMA (BẮT BUỘC)
+Word
+{
+  word: String,
+  phonetic: String,
+  meaning: String,
+  audio: String
+}
+
+VocabList
+{
+  title: String,
+  description: String,
+  level: String,
+  words: [ObjectId]
+}
+
+Flashcard
+{
+  userId: String,
+  word: String,
+  meaning: String,
+  status: "new" | "learning" | "mastered"
+}
+
+🧱 YÊU CẦU KỸ THUẬT
+- Use Express Router
+- Use async/await
+- Use Mongoose
+- Proper error handling
+- No authentication logic
+- Dummy userId = "user_demo"
+- Audio files served from /public/audio
+
+🧪 OUTPUT MONG MUỐN TỪ CLAUDE
+Claude MUST:
+
+Generate:
+
+models
+
+controllers
+
+routes
+
+Provide:
+
+Minimal EJS templates
+
+Example seed data
+
+Explain:
+
+How each route works
+
+How random word logic works
+
+⛔ NHỮNG THỨ TUYỆT ĐỐI KHÔNG LÀM
+- DO NOT change folder structure
+- DO NOT add TypeScript
+- DO NOT add frontend frameworks
+- DO NOT over-engineer
