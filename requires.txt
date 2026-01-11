@@ -1,0 +1,6 @@
+tôi muốn làm web học từ vựng tiếng anh = nodejs
+nó chỉ có 3 chwucs năng chính là học từu vựng, luyện tập, từ vựng của mình
+về phần học từ vựng thì tôi muốn học theo từng list(mỗi list 20 từ), ở mỗi list thì chỉ làm 2 chức năng là từ vựng với luyện tập nghe chính tả(random từ vựng)
+với người dùng có thể tự tạo Flashcards cho riêng mình
+fe mình muốn code theo hướng thuần ejs vào thẳng src be đc k
+db mình muốn mongo
