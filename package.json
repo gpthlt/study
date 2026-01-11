@@ -1,0 +1,33 @@
+{
+  "name": "study-vocabulary-app",
+  "version": "1.0.0",
+  "description": "English vocabulary learning web app with Node.js, Express, MongoDB, and EJS",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "seed": "node src/seed.js"
+  },
+  "keywords": [
+    "vocabulary",
+    "english",
+    "learning",
+    "flashcard",
+    "express",
+    "mongodb",
+    "ejs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "connect-flash": "^0.1.1",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "mongoose": "^8.9.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
