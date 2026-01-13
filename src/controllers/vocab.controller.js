@@ -2,7 +2,7 @@ const VocabList = require("../models/VocabList");
 const Word = require("../models/Word");
 const fs = require("fs").promises;
 const path = require("path");
-
+const gtts = require("node-gtts")("en");
 // GET /vocab - List all vocabulary lists
 exports.getVocabLists = async (req, res) => {
   try {
@@ -360,18 +360,36 @@ exports.generateAudio = async (req, res) => {
     const audioFileName = `${word.word.toLowerCase().replace(/\s+/g, "-")}.mp3`;
     const audioPath = `/audio/${audioFileName}`;
 
+    // Ensure audio directory exists
+    const audioDir = path.join(__dirname, "..", "public", "audio");
+    try {
+      await fs.mkdir(audioDir, { recursive: true });
+    } catch (err) {
+      // Directory already exists, ignore error
+    }
+
+    // Generate audio file using Google TTS
+    const filepath = path.join(audioDir, audioFileName);
+
+    await new Promise((resolve, reject) => {
+      gtts.save(filepath, word.word, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+
     // Update word with audio path
     word.audio = audioPath;
     await word.save();
 
-    req.flash(
-      "success_msg",
-      `Audio path set to ${audioPath}. Note: You need to manually place the audio file in public/audio/`
-    );
+    req.flash("success_msg", `Audio generated successfully for "${word.word}"`);
     res.redirect(`/vocab/${req.params.listId}`);
   } catch (error) {
     console.error("Error generating audio:", error);
-    req.flash("error_msg", "Error generating audio");
+    req.flash("error_msg", `Error generating audio: ${error.message}`);
     res.redirect(`/vocab/${req.params.listId}`);
   }
 };
