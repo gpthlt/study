@@ -69,7 +69,7 @@
 
     <main>
       <!-- Flash Messages -->
-      <% if (typeof success_msg !== 'undefined' && success_msg) { %>
+      <% if (success_msg && success_msg.length > 0) { %>
       <div class="container mt-3">
         <div
           class="alert alert-success alert-dismissible fade show"
@@ -83,7 +83,7 @@
           ></button>
         </div>
       </div>
-      <% } %> <% if (typeof error_msg !== 'undefined' && error_msg) { %>
+      <% } %> <% if (error_msg && error_msg.length > 0) { %>
       <div class="container mt-3">
         <div
           class="alert alert-danger alert-dismissible fade show"
@@ -97,7 +97,7 @@
           ></button>
         </div>
       </div>
-      <% } %> <% if (typeof error !== 'undefined' && error) { %>
+      <% } %> <% if (error && error.length > 0) { %>
       <div class="container mt-3">
         <div
           class="alert alert-danger alert-dismissible fade show"
