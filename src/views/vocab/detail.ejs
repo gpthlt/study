@@ -3,7 +3,25 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1><%= vocabList.title %></h1>
-    <a href="/vocab" class="btn btn-secondary">Back to Lists</a>
+    <div>
+      <a
+        href="/vocab/<%= vocabList._id %>/edit"
+        class="btn btn-outline-secondary"
+      >
+        <i class="bi bi-pencil"></i> Edit List
+      </a>
+      <form
+        action="/vocab/<%= vocabList._id %>/delete"
+        method="POST"
+        class="d-inline"
+        onsubmit="return confirm('Delete this vocabulary list and all its words?')"
+      >
+        <button type="submit" class="btn btn-outline-danger">
+          <i class="bi bi-trash"></i> Delete List
+        </button>
+      </form>
+      <a href="/vocab" class="btn btn-secondary">Back to Lists</a>
+    </div>
   </div>
 
   <div class="mb-4">
@@ -16,19 +34,27 @@
     <a href="/vocab/<%= vocabList._id %>/listening" class="btn btn-success">
       <i class="bi bi-headphones"></i> Practice Listening
     </a>
+    <a href="/vocab/<%= vocabList._id %>/word/create" class="btn btn-primary">
+      <i class="bi bi-plus-circle"></i> Add New Word
+    </a>
   </div>
 
   <div class="row">
     <% if (vocabList.words.length === 0) { %>
     <div class="alert alert-warning">
       This vocabulary list has no words yet.
+      <a
+        href="/vocab/<%= vocabList._id %>/word/create"
+        class="btn btn-sm btn-primary"
+        >Add First Word</a
+      >
     </div>
     <% } else { %> <% vocabList.words.forEach((word, index) => { %>
     <div class="col-md-6 mb-3">
       <div class="card">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start">
-            <div>
+            <div class="flex-grow-1">
               <h5 class="card-title">
                 <%= index + 1 %>. <%= word.word %> <% if (word.phonetic) { %>
                 <small class="text-muted">/<%= word.phonetic %>/</small>
@@ -40,19 +66,60 @@
                 <source src="<%= word.audio %>" type="audio/mpeg" />
                 Your browser does not support the audio element.
               </audio>
+              <% } else { %>
+              <form
+                action="/vocab/<%= vocabList._id %>/word/<%= word._id %>/generate-audio"
+                method="POST"
+                class="d-inline"
+              >
+                <button
+                  type="submit"
+                  class="btn btn-sm btn-warning"
+                  title="Generate Audio Path"
+                >
+                  <i class="bi bi-volume-up"></i> Set Audio
+                </button>
+              </form>
               <% } %>
             </div>
-            <form action="/flashcard/add" method="POST" class="d-inline">
-              <input type="hidden" name="word" value="<%= word.word %>" />
-              <input type="hidden" name="meaning" value="<%= word.meaning %>" />
-              <button
-                type="submit"
-                class="btn btn-outline-primary btn-sm"
-                title="Add to Flashcards"
+            <div class="btn-group-vertical" role="group">
+              <form action="/flashcard/add" method="POST" class="d-inline">
+                <input type="hidden" name="word" value="<%= word.word %>" />
+                <input
+                  type="hidden"
+                  name="meaning"
+                  value="<%= word.meaning %>"
+                />
+                <button
+                  type="submit"
+                  class="btn btn-outline-primary btn-sm"
+                  title="Add to Flashcards"
+                >
+                  <i class="bi bi-bookmark-plus"></i>
+                </button>
+              </form>
+              <a
+                href="/vocab/<%= vocabList._id %>/word/<%= word._id %>/edit"
+                class="btn btn-outline-secondary btn-sm"
+                title="Edit Word"
               >
-                <i class="bi bi-bookmark-plus"></i>
-              </button>
-            </form>
+                <i class="bi bi-pencil"></i>
+              </a>
+              <form
+                action="/vocab/<%= vocabList._id %>/word/<%= word._id %>/delete"
+                method="POST"
+                class="d-inline"
+                onsubmit="return confirm('Delete this word?')"
+              >
+                <button
+                  type="submit"
+                  class="btn btn-outline-danger btn-sm"
+                  title="Delete Word"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>

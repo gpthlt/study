@@ -1,0 +1,46 @@
+<%- include('../layout/header') %>
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Edit Vocabulary List</h1>
+    <a href="/vocab/<%= vocabList._id %>" class="btn btn-secondary">Cancel</a>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <form action="/vocab/<%= vocabList._id %>/edit" method="POST">
+            <div class="mb-3">
+              <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="title" name="title" value="<%= vocabList.title %>" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea class="form-control" id="description" name="description" rows="3"><%= vocabList.description || '' %></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="level" class="form-label">Level <span class="text-danger">*</span></label>
+              <select class="form-select" id="level" name="level" required>
+                <option value="beginner" <%= vocabList.level === 'beginner' ? 'selected' : '' %>>Beginner</option>
+                <option value="intermediate" <%= vocabList.level === 'intermediate' ? 'selected' : '' %>>Intermediate</option>
+                <option value="advanced" <%= vocabList.level === 'advanced' ? 'selected' : '' %>>Advanced</option>
+              </select>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> Save Changes
+              </button>
+              <a href="/vocab/<%= vocabList._id %>" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../layout/footer') %>
